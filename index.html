@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Web Designer | Premium Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #050508;
+            --text-main: #ffffff;
+            --text-muted: #8e8e93;
+            --led-cyan: #00f0ff;
+            --led-purple: #8a2be2;
+            --card-bg: #0f0f15;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --gradient-accent: linear-gradient(90deg, #00f0ff, #8a2be2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .aura-glow {
+            position: fixed;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 50vh;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.07) 0%, rgba(138, 43, 226, 0.02) 60%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* NAVBAR */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 5, 8, 0.8);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            letter-spacing: -0.5px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        .logo span {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-btn {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            z-index: 1001;
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: var(--text-main);
+            transition: 0.3s;
+        }
+
+        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); background: var(--led-cyan); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; }
+        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); background: var(--led-cyan); }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(5, 5, 8, 0.98);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            transition: right 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .nav-menu.active { right: 0; }
+
+        .nav-link {
+            color: var(--text-main);
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link.active-link {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* PAGINE SPA */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 7.5rem 1.5rem 4rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            z-index: 1;
+            position: relative;
+        }
+
+        .page.active-page {
+            display: block;
+            animation: slideUpFade 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1.2rem;
+        }
+
+        h1 span {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .led-bar {
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-accent);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+            border-radius: 2px;
+            margin-bottom: 3rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .svg-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        /* GRIGLIA PROGETTI */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .card-content { padding: 1.5rem; }
+        .card-header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+        .card h3 { font-size: 1.3rem; font-weight: 700; }
+
+        .badge {
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: var(--led-cyan);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .btn {
+            background: #fff; color: #000; border: none; padding: 1rem 2rem;
+            border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;
+            transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+        }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 255, 255, 0.2); }
+
+        /* MODALE DETTAGLI E CAROUSEL TOUCH */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active-modal { display: flex; }
+
+        .modal-content {
+            background: #0f0f16;
+            border: 1px solid var(--border-color);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 24px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 240, 255, 0.1);
+            animation: modalScaleUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @keyframes modalScaleUp {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.2rem; right: 1.2rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            color: #fff; width: 40px; height: 40px;
+            border-radius: 50%; font-size: 1.2rem;
+            cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: clamp(220px, 40vh, 400px);
+            background: #000;
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .carousel-slide { min-width: 100%; height: 100%; user-select: none; }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+        .carousel-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; width: 44px; height: 44px; border-radius: 50%;
+            cursor: pointer; display: none; align-items: center; justify-content: center;
+            z-index: 5; transition: 0.2s;
+        }
+        .carousel-btn:hover { background: var(--gradient-accent); border-color: transparent; }
+        .prev-btn { left: 1rem; }
+        .next-btn { right: 1rem; }
+
+        .modal-body { padding: 2rem; }
+        .modal-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+
+        .modal-specs {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem; margin: 1.5rem 0; padding: 1rem 0;
+            border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+        }
+        .spec-item text { display: block; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+        .spec-item val { display: block; font-size: 1rem; font-weight: 600; color: #fff; margin-top: 2px; }
+
+        /* FORM PREVENTIVO */
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.6rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        .form-input, select {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .form-input:focus, select:focus {
+            border-color: var(--led-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: "▼"; font-size: 0.75rem; color: var(--text-muted);
+            position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* SOCIAL GRID */
+        .social-row { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .social-btn {
+            display: flex; align-items: center; gap: 18px; background: var(--card-bg);
+            border: 1px solid var(--border-color); color: #fff; padding: 1.5rem;
+            border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 1.1rem;
+            transition: 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .social-btn:hover {
+            border-color: var(--led-cyan); transform: translateY(-3px);
+            background: rgba(0, 240, 255, 0.02); box-shadow: 0 10px 25px rgba(0, 240, 255, 0.05);
+        }
+        .social-btn svg { width: 28px; height: 28px; fill: currentColor; }
+
+        /* WIDGET IA GALLEGGIANTE */
+        .ai-floating-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .ai-btn-trigger {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0f0f16;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .ai-btn-trigger:hover {
+            transform: scale(1.08) rotate(15deg);
+            border-color: var(--led-cyan);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+        }
+
+        .ai-btn-trigger svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: var(--led-cyan);
+            stroke-width: 2;
+        }
+
+        .ai-chat-box {
+            position: absolute;
+            bottom: 75px;
+            right: 0;
+            width: 320px;
+            height: 400px;
+            background: #0f0f16;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 30px rgba(138, 43, 226, 0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform-origin: bottom right;
+            animation: widgetScaleUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @keyframes widgetScaleUp {
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .ai-chat-box.active-chat {
+            display: flex;
+        }
+
+        .ai-chat-header {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--led-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--led-cyan);
+        }
+
+        .ai-chat-header span {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ai-msg {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        .ai-msg.bot {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .ai-msg.user {
+            background: var(--gradient-accent);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-chat-input-area {
+            padding: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+            background: #050508;
+        }
+
+        .ai-chat-input-area input {
+            flex: 1;
+            background: #0f0f16;
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .ai-chat-input-area input:focus {
+            border-color: var(--led-cyan);
+        }
+
+        .ai-chat-input-area button {
+            background: #fff;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .ai-chat-input-area button:hover {
+            transform: scale(1.05);
+            background: var(--led-cyan);
+        }
+
+        /* RESPONSIVE */
+        @media (min-width: 768px) {
+            .menu-btn { display: none; }
+            .nav-menu { position: static; height: auto; width: auto; flex-direction: row; gap: 2rem; background: transparent; backdrop-filter: none; }
+            .nav-link { font-size: 0.95rem; }
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .social-row { grid-template-columns: repeat(2, 1fr); }
+            .form-row-2 { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .carousel-btn { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aura-glow"></div>
+
+    <header>
+        <div class="nav-container">
+            <a class="logo" onclick="switchPage('home')">Apex <span>Designer</span></a>
+            <button class="menu-btn" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a class="nav-link active-link" onclick="switchPage('home')">Home</a></li>
+                <li><a class="nav-link" onclick="switchPage('progetti')">Tutti i progetti</a></li>
+                <li><a class="nav-link" onclick="switchPage('chi-sono')">Chi sono?</a></li>
+                <li><a class="nav-link" onclick="switchPage('social')">Social</a></li>
+                <li><a class="nav-link" onclick="switchPage('preventivo')">Preventivo</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div id="home" class="page active-page">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <h1>Idee Trasformate in<br><span>Codice Pixel-Perfect</span></h1>
+        <div class="led-bar"></div>
+        <p>Esploro i confini del web design moderno. Sviluppo prototipi d'impatto ad altissime prestazioni studiati appositamente per catturare l'attenzione.</p>
+        <button class="btn" onclick="switchPage('preventivo')">Inizia Ora</button>
+    </div>
+
+    <div id="progetti" class="page">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+        <h1>Tutti i <span>Progetti</span></h1>
+        <div class="led-bar"></div>
+        <p>Clicca su una card per esplorare le specifiche dettagliate e la galleria screenshot.</p>
+
+        <div class="grid">
+            <div class="card" onclick="openModal(0)">
+                <div class="card-img-wrapper">
+                    <img src="https://i.postimg.cc/WbZd6J6n/Schermata-20260601-120855.png" alt="Aura E-Commerce">
+                </div>
+                <div class="card-content">
+                    <div class="card-header-box">
+                        <h3>Aura E-Commerce</h3>
+                        <span class="badge">E-Commerce</span>
+                    </div>
+                    <p>Shop minimale ed elegante ottimizzato per conversioni e sfilate digitali di lusso.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal(1)">
+                <div class="card-img-wrapper">
+                    <img src="https://i.postimg.cc/L5tVJ4DD/Schermata-20260601-122206.png" alt="Nexus Dashboard">
+                </div>
+                <div class="card-content">
+                    <div class="card-header-box">
+                        <h3>SABORISTÒ</h3>
+                        <span class="badge">Ristorazione</span>
+                    </div>
+                    <p>Interfaccia complessa aziendale con aggiornamenti analitici a bassa latenza.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chi-sono" class="page">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#8a2be2" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+        <h1>Chi <span>Sono?</span></h1>
+        <div class="led-bar"></div>
+        <p>Sono un designer e sviluppatore front-end indipendente. Unisco un'estetica visiva ricercata alla pulizia millimetrica del codice sorgente.</p>
+    </div>
+
+    <div id="social" class="page">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5V8h6"></path></svg>
+        <h1>Contatti <span>Social</span></h1>
+        <div class="led-bar"></div>
+        <p>Seguimi o scrivimi direttamente sui miei due unici canali ufficiali per aggiornamenti in tempo reale.</p>
+
+        <div class="social-row">
+            <a href="https://instagram.com" target="_blank" class="social-btn">
+                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke="currentColor" stroke-width="2" fill="none"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" fill="currentColor"></line></svg>
+                Instagram
+            </a>
+            <a href="https://t.me" target="_blank" class="social-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                Telegram
+            </a>
+        </div>
+    </div>
+
+    <div id="preventivo" class="page">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#8a2be2" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14h14v-7"></path></svg>
+        <h1>Configura <span>Preventivo</span></h1>
+        <div class="led-bar"></div>
+
+        <form id="form-preventivo" onsubmit="inviaPreventivoBypass(event)">
+            <div class="form-row-2">
+                <div class="input-group">
+                    <label>Nome</label>
+                    <input type="text" id="form-nome" class="form-input" placeholder="Es. Mario" required>
+                </div>
+                <div class="input-group">
+                    <label>Cognome</label>
+                    <input type="text" id="form-cognome" class="form-input" placeholder="Es. Rossi" required>
+                </div>
+            </div>
+
+            <div class="form-row-2">
+                <div class="input-group">
+                    <label>Selezione Budget</label>
+                    <div class="select-wrapper">
+                        <select id="form-budget" required>
+                            <option value="" disabled selected hidden>Scegli il budget stimato</option>
+                            <option value="Meno di 1.000€">Meno di 1.000€</option>
+                            <option value="1.000€ - 3.000€">1.000€ - 3.000€</option>
+                            <option value="3.000€ - 5.000€">3.000€ - 5.000€</option>
+                            <option value="Oltre 5.000€">Oltre 5.000€</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Selezione di Sito Web</label>
+                    <div class="select-wrapper">
+                        <select id="form-sito" required>
+                            <option value="" disabled selected hidden>Scegli la tipologia di sito</option>
+                            <option value="Landing Page">Landing Page (Mono-pagina)</option>
+                            <option value="Sito Vetrina Aziendale">Sito Vetrina Aziendale</option>
+                            <option value="E-Commerce">E-Commerce (Negozio Online)</option>
+                            <option value="Web Application Custom">Web Application Custom</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="form-email" class="form-input" placeholder="esempio@email.com" required>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1rem;">Invia Richiesta</button>
+        </form>
+    </div>
+
+    <div class="modal" id="project-modal" onclick="closeModalOutside(event)">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+
+            <div class="carousel-container" id="modal-carousel-container">
+                <button class="carousel-btn prev-btn" onclick="moveCarousel(-1)">&#10094;</button>
+                <button class="carousel-btn next-btn" onclick="moveCarousel(1)">&#10095;</button>
+                <div class="carousel-track" id="modal-carousel-track"></div>
+            </div>
+
+            <div class="modal-body">
+                <h2 class="modal-title" id="modal-project-title">Nome Progetto</h2>
+                <p id="modal-project-desc">Descrizione...</p>
+
+                <div class="modal-specs">
+                    <div class="spec-item"><text>Tecnologie</text><val id="modal-spec-tech">HTML, CSS, JS</val></div>
+                    <div class="spec-item"><text>Timeline</text><val id="modal-spec-time">3 Settimane</val></div>
+                    <div class="spec-item"><text>Rilascio</text><val id="modal-spec-year">2026</val></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-floating-widget">
+        <div class="ai-chat-box" id="ai-chat-box">
+            <div class="ai-chat-header">
+                <div class="ai-status-dot"></div>
+                <span>Apex AI Assistant</span>
+            </div>
+            <div class="ai-chat-messages" id="ai-chat-messages">
+                <div class="ai-msg bot">Ciao! Sono l'assistente IA di Apex. Come posso aiutarti oggi con il tuo progetto web?</div>
+            </div>
+            <div class="ai-chat-input-area">
+                <input type="text" id="ai-user-input" placeholder="Chiedimi qualcosa..." onkeydown="if(event.key === 'Enter') sendAiMessage()">
+                <button onclick="sendAiMessage()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#000" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
+        <button class="ai-btn-trigger" id="ai-btn-trigger" onclick="toggleAiChat()">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"/>
+                <path d="M12 6v12M6 12h12" opacity="0.3"/>
+                <circle cx="9" cy="11" r="1" fill="currentColor"/>
+                <circle cx="15" cy="11" r="1" fill="currentColor"/>
+                <path d="M9 15s1.5 1 3 1 3-1 3-1" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        const progettiData = [
+            {
+                title: "Aura E-Commerce Concept",
+                desc: "Un'esperienza d'acquisto digitale premium focalizzata sul rendering immediato di elementi visivi d'alta moda. Layout flessibile e transizioni asincrone.",
+                tech: "HTML5, CSS, JAVASCRIPT",
+                time: "3 Settimane",
+                year: "2026",
+                images: [
+                    "https://i.postimg.cc/nhBnMybS/Schermata-20260601-120855.png",
+                    "https://i.postimg.cc/02SzdJdC/Schermata-20260601-120712.png",
+                    "https://i.postimg.cc/GhD4JsJx/Schermata-20260601-120812.png",
+                     "https://i.postimg.cc/8Pv7BrBy/Schermata-20260601-120931.png",
+                     "https://i.postimg.cc/kgdBjXfQ/Schermata-20260601-121011.png"
+                ]
+            },
+            {
+                title: "Nexus Dashboard Analytica",
+                desc: "Pannello amministrativo per il tracciamento dei server e dei flussi finanziari di imprese digitali. Integra grafici su tela privi di latenza.",
+                tech: "Canvas API, CSS Grid, JSON Stream",
+                time: "5 Settimane",
+                year: "2026",
+                images: [
+                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800",
+                    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=800",
+                    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800"
+                ]
+            }
+        ];
+
+        let currentSlideIndex = 0;
+
+        function openModal(index) {
+            const data = progettiData[index];
+            document.getElementById('modal-project-title').innerText = data.title;
+            document.getElementById('modal-project-desc').innerText = data.desc;
+            document.getElementById('modal-spec-tech').innerText = data.tech;
+            document.getElementById('modal-spec-time').innerText = data.time;
+            document.getElementById('modal-spec-year').innerText = data.year;
+
+            const track = document.getElementById('modal-carousel-track');
+            track.innerHTML = '';
+            data.images.forEach(imgUrl => {
+                const slide = document.createElement('div');
+                slide.classList.add('carousel-slide');
+                slide.innerHTML = `<img src="${imgUrl}" alt="Screenshot">`;
+                track.appendChild(slide);
+            });
+
+            currentSlideIndex = 0;
+            updateCarouselPosition();
+
+            document.getElementById('project-modal').classList.add('active-modal');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('project-modal').classList.remove('active-modal');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeModalOutside(e) {
+            if(e.target.id === 'project-modal') closeModal();
+        }
+
+        function moveCarousel(direction) {
+            const track = document.getElementById('modal-carousel-track');
+            const totalSlides = track.children.length;
+            if (totalSlides === 0) return;
+            currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+            updateCarouselPosition();
+        }
+
+        function updateCarouselPosition() {
+            const track = document.getElementById('modal-carousel-track');
+            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+        }
+
+        // SWIPE TOUCH MANAGER
+        const carouselContainer = document.getElementById('modal-carousel-container');
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        carouselContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        carouselContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchStartX - touchEndX > swipeThreshold) {
+                moveCarousel(1);
+            } else if (touchEndX - touchStartX > swipeThreshold) {
+                moveCarousel(-1);
+            }
+        }
+
+        // SPA CONTROLLER
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        function switchPage(pageId) {
+            menuToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active-link'));
+
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) {
+                targetPage.classList.add('active-page');
+                window.scrollTo(0,0);
+            }
+
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                if(link.getAttribute('onclick').includes(`'${pageId}'`)) {
+                    link.classList.add('active-link');
+                }
+            });
+        }
+
+        // FUNZIONE INCOALTO INVIO EMAIL
+        function inviaPreventivoBypass(e) {
+            e.preventDefault();
+
+            const emailTitolare = "webdesignerapex@gmail.com";
+
+            const nome = document.getElementById('form-nome').value;
+            const cognome = document.getElementById('form-cognome').value;
+            const budget = document.getElementById('form-budget').value;
+            const sito = document.getElementById('form-sito').value;
+            const emailCliente = document.getElementById('form-email').value;
+
+            const oggetto = encodeURIComponent(`NOTIFICA: Richiesta di Preventivo Web | ${cognome.toUpperCase()} ${nome}`);
+            const corpo = encodeURIComponent(
+                `Spettabile Studio,\n\n` +
+                `Si notifica la ricezione di un nuovo lead qualificato dal portfolio web.\n` +
+                `Di seguito si riepilogano le specifiche del progetto e i dettagli di contatto:\n\n` +
+                `  ■  Cliente: ${nome} ${cognome}\n` +
+                `  ■  Servizio Richiesto: ${sito}\n` +
+                `  ■  Budget di Riferimento: ${budget}\n` +
+                `  ■  Contatto Principale: ${emailCliente}\n\n` +
+                `La richiesta è stata presa in carico dal sistema. Si prega di ricontattare il cliente entro le prossime 24 ore.\n\n` +
+                `Cordiali saluti,\n` +
+                `Portfolio Automated Notification`
+            );
+
+            window.location.href = `mailto:${emailTitolare}?subject=${oggetto}&body=${corpo}`;
+        }
+
+        // LOGICA E RISPOSTE SCRIPT IA ASSISTENTE
+        function toggleAiChat() {
+            const chatBox = document.getElementById('ai-chat-box');
+            chatBox.classList.toggle('active-chat');
+        }
+
+        function sendAiMessage() {
+            const inputEl = document.getElementById('ai-user-input');
+            const text = inputEl.value.trim();
+            if(!text) return;
+
+            appendAiMessage(text, 'user');
+            inputEl.value = '';
+
+            setTimeout(() => {
+                const botReply = generateAiReply(text);
+                appendAiMessage(botReply, 'bot');
+            }, 600);
+        }
+
+        function appendAiMessage(text, sender) {
+            const msgContainer = document.getElementById('ai-chat-messages');
+            const msgEl = document.createElement('div');
+            msgEl.classList.add('ai-msg', sender);
+            msgEl.innerText = text;
+            msgContainer.appendChild(msgEl);
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+        }
+
+        function generateAiReply(input) {
+            const lower = input.toLowerCase();
+            if(lower.includes('sito') || lower.includes('preventivo') || lower.includes('costo') || lower.includes('prezzo')) {
+                return "Puoi configurare un preventivo personalizzato direttamente nella sezione 'Preventivo' del sito! Lavoriamo su Landing Page, E-Commerce e Web App.";
+            }
+            if(lower.includes('progett') || lower.includes('lavori')) {
+                return "Puoi visionare i progetti di punta nella pagina 'Tutti i progetti', come il nostro concept E-Commerce o la dashboard analitica.";
+            }
+            if(lower.includes('contatt') || lower.includes('social') || lower.includes('telegram')) {
+                return "Siamo attivi su Instagram e Telegram. Trovi i link diretti nella pagina 'Social'.";
+            }
+            if(lower.includes('chi sei') || lower.includes('competenze') || lower.includes('tech')) {
+                return "Apex è uno sviluppatore front-end freelance specializzato in design moderno, codice pixel-perfect ed esperienze utente premium (HTML5, CSS fluid, JS).";
+            }
+            return "Interessante! Se hai domande specifiche sui servizi o vuoi avviare una collaborazione, compila il form nella pagina Preventivo.";
+        }
+    </script>
+</body>
+</html>
